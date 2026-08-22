@@ -1,6 +1,8 @@
 import os
+import json
+from typing import Union, List
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
-from datetime import timedelta
 
 class Settings(BaseSettings):
     # Database
@@ -23,12 +25,25 @@ class Settings(BaseSettings):
     API_VERSION: str = "1.0.0"
     
     # CORS
-    ALLOWED_ORIGINS: list = [
+    ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
+        "*"
     ]
+    
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v):
+        if isinstance(v, str):
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        return v
     
     # Device Pairing
     PAIRING_CODE_EXPIRY_MINUTES: int = 10
