@@ -4,8 +4,13 @@ from config import settings
 from models import Base
 
 # Create engine
+connect_args = {}
+if settings.DATABASE_URL.startswith("sqlite"):
+    connect_args["check_same_thread"] = False
+
 engine = create_engine(
     settings.DATABASE_URL,
+    connect_args=connect_args,
     pool_pre_ping=True,
     echo=False
 )

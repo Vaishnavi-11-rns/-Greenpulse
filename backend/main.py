@@ -184,6 +184,7 @@ def health_check():
 @app.post("/auth/register", response_model=UserResponse)
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
     """Register a new user"""
+    init_db()
     # Check if user exists
     existing_user = db.query(User).filter(User.email == request.email).first()
     if existing_user:
