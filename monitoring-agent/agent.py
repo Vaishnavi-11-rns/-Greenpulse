@@ -269,9 +269,17 @@ class GreenPulseAgent:
 
     def run(self):
         """Main monitoring loop"""
-        logger.info("=" * 60)
-        logger.info("GreenPulse Monitoring Agent")
-        logger.info("=" * 60)
+        print("=" * 60)
+        print("  GreenPulse Monitoring Agent")
+        print("  Dashboard: https://greenpulse-ikk9.onrender.com")
+        print("=" * 60)
+        print()
+        print("  STEPS:")
+        print("  1. Open your GreenPulse dashboard in browser")
+        print("  2. Go to Connect Device and click 'Generate Code'")
+        print("  3. Copy the 6-digit code shown on screen")
+        print("  4. Paste it below when prompted")
+        print()
         
         if not self.load_config():
             if not self.request_pairing_code():
@@ -313,9 +321,17 @@ class GreenPulseAgent:
 
 
 def main():
-    api_url = os.getenv('GREENPULSE_API_URL', 'http://localhost:8000')
-    agent = GreenPulseAgent(api_url=api_url)
-    agent.run()
+    api_url = os.getenv('GREENPULSE_API_URL', 'https://greenpulse-ikk9.onrender.com')
+    try:
+        agent = GreenPulseAgent(api_url=api_url)
+        agent.run()
+    except Exception as e:
+        print(f"\n\n[ERROR] Unexpected error: {e}")
+    finally:
+        # Keep window open so user can read messages - press Enter to close
+        print("\n" + "=" * 60)
+        print("Agent stopped. Press Enter to close this window...")
+        input()
 
 
 if __name__ == '__main__':
