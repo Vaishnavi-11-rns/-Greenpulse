@@ -236,22 +236,55 @@ class GreenPulseAgent:
             logger.error(f"Error submitting telemetry: {e}")
             return False
     
+    def load_config(self) -> bool:
+        """Load saved pairing configuration if available"""
+        config_path = os.path.join(os.path.dirname(__file__), 'agent_config.json')
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    config = json.load(f)
+                    self.access_token = config.get('access_token')
+                    self.device_id = config.get('device_id', self.device_id)
+                    self.device_name = config.get('device_name', self.device_name)
+                    self.is_paired = True
+                    logger.info(f"✓ Loaded saved pairing for {self.device_name}")
+                    return True
+            except Exception as e:
+                logger.warning(f"Could not load saved config: {e}")
+        return False
+
+    def save_config(self):
+        """Save pairing configuration locally"""
+        config_path = os.path.join(os.path.dirname(__file__), 'agent_config.json')
+        try:
+            with open(config_path, 'w') as f:
+                json.dump({
+                    'access_token': self.access_token,
+                    'device_id': self.device_id,
+                    'device_name': self.device_name
+                }, f, indent=2)
+            logger.info("✓ Saved device credentials to agent_config.json")
+        except Exception as e:
+            logger.warning(f"Could not save config: {e}")
+
     def run(self):
         """Main monitoring loop"""
         logger.info("=" * 60)
         logger.info("GreenPulse Monitoring Agent")
         logger.info("=" * 60)
         
-        if not self.request_pairing_code():
-            logger.error("Failed to request pairing code")
-            return
-        
-        if not self.pair_device():
-            logger.error("Failed to pair device")
-            return
+        if not self.load_config():
+            if not self.request_pairing_code():
+                logger.error("Failed to request pairing code")
+                return
+            
+            if not self.pair_device():
+                logger.error("Failed to pair device")
+                return
+            self.save_config()
         
         logger.info(f"\n✓ Monitoring {self.device_name}")
-        logger.info(f"  Collecting metrics every {self.monitoring_interval} seconds")
+        logger.info(f"  Collecting real metrics every {self.monitoring_interval} seconds")
         logger.info("\nPress Ctrl+C to stop\n")
         
         consecutive_errors = 0

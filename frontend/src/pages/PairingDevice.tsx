@@ -117,15 +117,19 @@ export default function PairingDevice() {
                     <p className="text-slate-400 mt-1">
                       Get the GreenPulse monitoring agent for your operating system
                     </p>
-                    <div className="mt-3 flex gap-2">
-                      <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm transition">
-                        📥 Windows
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <a
+                        href="/downloads/GreenPulse-Agent.exe"
+                        download="GreenPulse-Agent.exe"
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-semibold transition inline-flex items-center gap-1.5 shadow-lg shadow-emerald-900/30"
+                      >
+                        📥 Windows (.exe)
+                      </a>
+                      <button className="px-4 py-2 bg-slate-800 text-slate-400 rounded-lg text-sm cursor-not-allowed">
+                        📥 macOS (Coming soon)
                       </button>
-                      <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm transition">
-                        📥 macOS
-                      </button>
-                      <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm transition">
-                        📥 Linux
+                      <button className="px-4 py-2 bg-slate-800 text-slate-400 rounded-lg text-sm cursor-not-allowed">
+                        📥 Linux (Coming soon)
                       </button>
                     </div>
                   </div>
