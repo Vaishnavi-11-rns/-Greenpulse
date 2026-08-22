@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     API_VERSION: str = "1.0.0"
     
     # CORS
-    ALLOWED_ORIGINS: List[str] = [
+    ALLOWED_ORIGINS: Union[List[str], str] = [
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
@@ -33,7 +33,7 @@ class Settings(BaseSettings):
         "*"
     ]
     
-    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @field_validator("ALLOWED_ORIGINS", mode="after")
     @classmethod
     def assemble_cors_origins(cls, v):
         if isinstance(v, str):
